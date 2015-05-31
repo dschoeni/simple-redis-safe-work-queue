@@ -51,7 +51,7 @@ function createClient(queueName, options) {
   function rawPush(work, cb) {
     options.client.multi().
       hmset(queueName + '#' + work.id, work).
-      lrem(queues.pending, 1, work.id).
+      //lrem(queues.pending, 1, work.id). this call is done pre-emptively to prevent double work in the queue. This isn't an issue for us.
       lpush(queues.pending, work.id).
       zrem(queues.timeout, work.id).
       exec(done);
